@@ -1,0 +1,81 @@
+class Hash_table:
+  def __init__(self, s):
+      self.size = int(s*1.25)
+      self.T = [None] * self.size
+
+  def __hash_str(self, key_str):
+      num = 0
+      for c in key_str:
+          num += ord(c)
+      return num
+
+  def __hash(self, key_str):
+      key = self.__hash_str(key_str)
+      return key % self.size
+
+  def __double_hash(self, key_str):
+      key = self.__hash_str(key_str)
+      return 1 + (key % (self.size - 1))
+
+  def insert(self, key, value):
+      pos = self.__hash(key)
+      step = self.__double_hash(key)
+      while self.T[pos] and self.T[pos][0].nome != key:
+          pos = (pos + step) % self.size
+      if self.T[pos] is None:
+          self.T[pos] = []
+      self.T[pos].append(value)
+
+  def get(self, key):
+      pos = self.__hash(key)
+      step = self.__double_hash(key)
+      while self.T[pos]:
+          if self.T[pos][0].nome == key:
+              return self.T[pos][0]
+          pos = (pos + step) % self.size
+      return None
+
+  def display(self):
+      print("{")
+      for i in range(self.size):
+          alunos = self.T[i]
+          _str = ""
+          if alunos is not None:
+              for aluno in alunos:
+                  _str += aluno.to_string() + " "
+              print("[" + _str + "]")
+          else:
+              print("[]")
+      print("}")
+
+class Aluno:
+  def __init__(self, nome, matricula):
+      self.nome = nome
+      self.matricula = matricula
+
+  def to_string(self):
+      return self.nome + " - " + str(self.matricula)
+    
+a1 = Aluno("Maria", 12)
+a2 = Aluno("João", 6)
+a3 = Aluno("José", 24)
+a4 = Aluno("Lucas", 36)
+a5 = Aluno("Matheus", 3)
+a6 = Aluno("Simão", 7)
+a7 = Aluno("Jandiclei", 16)
+a8 = Aluno("Jandiclei", 11)
+a9 = Aluno("Carlos", 17)
+a10 = Aluno("Valdirene", 76)
+
+ht = Hash_table(10)
+ht.insert(a1.nome, a1)
+ht.insert(a2.nome, a2)
+ht.insert(a3.nome, a3)
+ht.insert(a4.nome, a4)
+ht.insert(a5.nome, a5)
+ht.insert(a6.nome, a6)
+ht.insert(a7.nome, a7)
+ht.insert(a8.nome, a8)
+ht.insert(a9.nome, a9)
+ht.insert(a10.nome, a10)
+ht.display()
